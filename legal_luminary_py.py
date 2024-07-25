@@ -85,7 +85,7 @@ with st.sidebar:
         unsafe_allow_html=True
     )
     st.header("Navigation")
-    nav_options = ["Home", "About", "Settings"]
+    nav_options = ["Home", "About"]
     nav_choice = st.radio("Go to", nav_options)
     
     if st.button("Clear History"):
@@ -195,9 +195,19 @@ if nav_choice == "Home":
 
 elif nav_choice == "About":
     st.title("About")
-    st.write("This is a ChatGPT-like interface built with Streamlit.")
-    st.write("You can ask questions and get responses from a language model.")
+    st.write("""
+        **Singarams Legal Advisor** is a ChatGPT-like interface designed to assist with legal queries.
+        
+        This was developed by **Dharahas Singaram** and **Vikas Singaram**. 
+        Our chatbot is designed to provide responses based on legal documents and assist users with their legal inquiries.
+        
+        The chatbot uses advanced natural language processing models and machine learning techniques to understand and provide accurate responses to user questions.
+        
+        Key Features:
+        - Efficient retrieval of legal documents from a vast database.
+        - Accurate and contextually relevant responses to legal queries.
+        - User-friendly interface for seamless interaction.
+        
+        We hope **Singarams Legal Advisor** will be a valuable tool for anyone seeking legal information.
+    """)
 
-elif nav_choice == "Settings":
-    st.title("Settings")
-    st.write("Settings page for configuring the app.")
