@@ -159,7 +159,7 @@ if nav_choice == "Home":
 
                 # Optimize query retrieval
                 query_vector = model.encode(user_query).tolist()
-                docs = index_name.query(vector=query_vector, top_k=5, include_metadata=True)
+                docs = index.query(vector=query_vector, top_k=5, include_metadata=True)
 
                 # Convert Pinecone results to Document objects
                 docs_list = []
