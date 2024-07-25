@@ -191,7 +191,7 @@ if nav_choice == "Home":
             if message["role"] == "user":
                 st.write(f"<div style='text-align: right; margin: 10px 0;'><img src='https://img.icons8.com/ios-glyphs/30/000000/user.png' style='vertical-align:middle; margin-right: 5px;'></div><div style='text-align: right; margin: 10px 0;'>{message['content']}</div>", unsafe_allow_html=True)
             else:
-                st.write(f"<div style='text-align: left; margin: 10px 0;'><img src='https://raw.githubusercontent.com/Vikas-Singaram/ShockerBot/26dc1c1a93e4a5dc9c5fbfa81603da64cfa23731/shocker_bot_logo.jpg' style='vertical-align:middle; margin-right: 5px;' width='30'></div><div style='text-align: left; margin: 10px 0;'>{message['content']}</div>", unsafe_allow_html=True)
+                st.write(f"<div style='text-align: left; margin: 10px 0;'><img src='https://raw.githubusercontent.com/singaramvikas/Legal-Luminary/main/legal%20luminary%20logo.jpg' style='vertical-align:middle; margin-right: 5px;' width='30'></div><div style='text-align: left; margin: 10px 0;'>{message['content']}</div>", unsafe_allow_html=True)
 
 elif nav_choice == "About":
     st.title("About")
