@@ -5,3 +5,4 @@ sentence-transformers
 pinecone-client
 huggingface-hub
 langchain_community
+langchain_openai
