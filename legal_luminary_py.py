@@ -1,11 +1,11 @@
 import os
 import streamlit as st
-from langchain.llms import OpenAI
+from langchain_openai import ChatOpenAI
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import Pinecone as LangchainPinecone
 from sentence_transformers import SentenceTransformer
-from langchain.chains import load_qa_chain
+from langchain.chains.question_answering import load_qa_chain
 from langchain.schema import Document
 from pinecone import Pinecone, ServerlessSpec
 
@@ -41,8 +41,8 @@ vectorstore = LangchainPinecone(index, embeddings.embed_query, "text_field")
 
 # Initialize models and chain only once
 model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
-llm = OpenAI(api_key=openai_api_key)
-chain = load_qa_chain(llm, chain_type="stuff")
+llm = ChatOpenAI()
+chain = load_qa_chain(llm)
 
 # Streamlit interface layout
 st.set_page_config(page_title="Singaram's Legal Advisor", layout="wide")
