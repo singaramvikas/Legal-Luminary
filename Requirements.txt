@@ -4,3 +4,4 @@ openai
 sentence-transformers
 pinecone-client
 huggingface-hub
+langchain
