@@ -1,0 +1,9 @@
+streamlit
+langchain
+sentence_transformers
+pinecone-client
+llama-cpp-python
+huggingface_hub
+-U langchain-community
+openai
+langchain-openai
