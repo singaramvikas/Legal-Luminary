@@ -78,7 +78,7 @@ with st.sidebar:
     st.markdown(
         """
         <div class="sidebar-title">
-            <img src="https://raw.githubusercontent.com/Vikas-Singaram/ShockerBot/3a323888507453b5639e7168f79c16cf9ed2ba39/wsu_logo.png" width="30" />
+            <img src="https://raw.githubusercontent.com/singaramvikas/Legal-Luminary/blob/main/legal%20luminary%20logo.jpg" width="30" />
             <h1>Singarams Leagal Advisor</h1>
         </div>
         """,
