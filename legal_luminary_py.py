@@ -79,7 +79,7 @@ with st.sidebar:
         """
         <div class="sidebar-title">
             <img src="https://raw.githubusercontent.com/Vikas-Singaram/ShockerBot/3a323888507453b5639e7168f79c16cf9ed2ba39/wsu_logo.png" width="30" />
-            <h1>ShockerBot</h1>
+            <h1>Singarams Leagal Advisor</h1>
         </div>
         """,
         unsafe_allow_html=True
@@ -135,7 +135,7 @@ if nav_choice == "Home":
         """
         <div class="title-bar">
             <img src="https://raw.githubusercontent.com/Vikas-Singaram/ShockerBot/3a323888507453b5639e7168f79c16cf9ed2ba39/wsu_logo.png" width="70" />
-            <h1>ShockerBot</h1>
+            <h1>Singarams Legal Advisor</h1>
         </div>
         """,
         unsafe_allow_html=True
