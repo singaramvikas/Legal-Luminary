@@ -79,7 +79,7 @@ with st.sidebar:
         """
         <div class="sidebar-title">
             <img src="https://raw.githubusercontent.com/singaramvikas/Legal-Luminary/main/legal%20luminary%20logo.jpg" width="30" />
-            <h1>Singarams Leagal Advisor</h1>
+            <h1>Singarams Legal Advisor</h1>
         </div>
         """,
         unsafe_allow_html=True
