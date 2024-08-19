@@ -78,7 +78,7 @@ with st.sidebar:
     st.markdown(
         """
         <div class="sidebar-title">
-            <img src="https://raw.githubusercontent.com/singaramvikas/Legal-Luminary/main/PHOTO-2024-08-12-10-39-47.jpg" width="30" />
+            <img src="https://raw.githubusercontent.com/singaramvikas/Legal-Luminary/main/PHOTO-2024-08-12-10-39-47.jpg" width="40" />
             <h1>Singarams Legal Advisor</h1>
         </div>
         """,
@@ -134,7 +134,7 @@ if nav_choice == "Home":
     st.markdown(
         """
         <div class="title-bar">
-            <img src="https://raw.githubusercontent.com/singaramvikas/Legal-Luminary/main/PHOTO-2024-08-12-10-39-47.jpg" width="70" />
+            <img src="https://raw.githubusercontent.com/singaramvikas/Legal-Luminary/main/PHOTO-2024-08-12-10-39-47.jpg" width="80" />
             <h1>Singarams Legal Advisor</h1>
         </div>
         """,
@@ -191,7 +191,7 @@ if nav_choice == "Home":
             if message["role"] == "user":
                 st.write(f"<div style='text-align: right; margin: 10px 0;'><img src='https://img.icons8.com/ios-glyphs/30/000000/user.png' style='vertical-align:middle; margin-right: 5px;'></div><div style='text-align: right; margin: 10px 0;'>{message['content']}</div>", unsafe_allow_html=True)
             else:
-                st.write(f"<div style='text-align: left; margin: 10px 0;'><img src='https://raw.githubusercontent.com/singaramvikas/Legal-Luminary/main/PHOTO-2024-08-12-10-39-47.jpg' style='vertical-align:middle; margin-right: 5px;' width='30'></div><div style='text-align: left; margin: 10px 0;'>{message['content']}</div>", unsafe_allow_html=True)
+                st.write(f"<div style='text-align: left; margin: 10px 0;'><img src='https://raw.githubusercontent.com/singaramvikas/Legal-Luminary/main/PHOTO-2024-08-12-10-39-47.jpg' style='vertical-align:middle; margin-right: 5px;' width='40'></div><div style='text-align: left; margin: 10px 0;'>{message['content']}</div>", unsafe_allow_html=True)
 
 elif nav_choice == "About":
     st.title("About")
