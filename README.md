@@ -1,4 +1,7 @@
 # Legal-Luminary
+
+**use the streamlit app at legal-lumminary.streamlit.app**
+
 # Singarams Legal Advisor
 
 **Singarams Legal Advisor** is a web application designed to assist with legal queries. It leverages advanced natural language processing and machine learning techniques to provide accurate responses to user questions based on legal documents.
