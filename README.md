@@ -1,4 +1,4 @@
-# Legal-Luminary
+# Legal-Luminary Chatbot
 
 **use the streamlit app at legal-lumminary.streamlit.app**
 
