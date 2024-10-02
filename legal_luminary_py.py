@@ -8,6 +8,8 @@ from sentence_transformers import SentenceTransformer
 from langchain.chains.question_answering import load_qa_chain
 from langchain.schema import Document
 from pinecone import Pinecone, ServerlessSpec
+from langchain.memory import ConversationBufferMemory  # <-- Added import
+from langchain.chains import ConversationalRetrievalChain  # <-- Added import
 
 # Accessing the API keys from Streamlit secrets
 pinecone_api_key = st.secrets["PINECONE_API_KEY"]
@@ -39,10 +41,24 @@ index = pc.Index(index_name)
 embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/paraphrase-MiniLM-L6-v2')
 vectorstore = LangchainPinecone(index, embeddings.embed_query, "text_field")
 
-# Initialize models and chain only once
+# Initialize models and chains
 model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
-llm = ChatOpenAI()
-chain = load_qa_chain(llm)
+llm = ChatOpenAI(openai_api_key=openai_api_key)  # <-- Pass the API key explicitly
+
+# Initialize memory with a buffer size of 5 conversation turns (10 messages: user and bot)
+memory = ConversationBufferMemory(
+    memory_key="chat_history",
+    return_messages=True,
+    buffer_size=10  # 5 turns = 10 messages
+)
+
+# Initialize Conversational Retrieval Chain
+chain = ConversationalRetrievalChain.from_llm(
+    llm=llm,
+    retriever=vectorstore.as_retriever(),
+    memory=memory,
+    verbose=True
+)
 
 # Streamlit interface layout
 st.set_page_config(page_title="Singaram's Legal Advisor", layout="wide")
@@ -91,19 +107,25 @@ with st.sidebar:
     if st.button("Clear History"):
         if "history" in st.session_state:
             st.session_state.history = []
+        if "memory" in st.session_state:
+            st.session_state.memory = ConversationBufferMemory(
+                memory_key="chat_history",
+                return_messages=True,
+                buffer_size=10
+            )
         st.experimental_rerun()
 
-# Custom CSS for fixed input bar and smaller button
+# Custom CSS for fixed input bar and better UI
 st.markdown(
     """
     <style>
     .input-bar {
         position: fixed;
-        top: 0;
+        bottom: 0; /* Changed to bottom for a typical chat interface */
         width: 100%;
         background-color: white;
         padding: 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
         display: flex;
         z-index: 9999;
     }
@@ -125,6 +147,11 @@ st.markdown(
     .title-bar img {
         margin-right: 10px;
     }
+    .chat-container {
+        margin-bottom: 80px; /* To prevent overlap with input bar */
+        max-height: calc(100vh - 150px);
+        overflow-y: auto;
+    }
     </style>
     """, 
     unsafe_allow_html=True
@@ -141,57 +168,64 @@ if nav_choice == "Home":
         unsafe_allow_html=True
     )
 
-    # Initialize session state for conversation history
+    # Initialize session state for conversation history and memory
     if "history" not in st.session_state:
         st.session_state.history = []
-
-    # Question bar at the top of the screen
-    st.write('<div class="input-bar">', unsafe_allow_html=True)
-    
-    with st.form(key='question_form', clear_on_submit=True):
-        user_query = st.text_input("Enter your question:", key="input_box")
-        submit_button = st.form_submit_button(label='Send')
-        
-        if submit_button and user_query:
-            with st.spinner('Processing...'):
-                # Save user input to history
-                st.session_state.history.insert(0, {"role": "user", "content": user_query})
-
-                # Optimize query retrieval
-                query_vector = model.encode(user_query).tolist()
-                docs = index.query(vector=query_vector, top_k=5, include_metadata=True)
-
-                # Convert Pinecone results to Document objects
-                docs_list = []
-                for doc in docs['matches']:
-                    if 'metadata' in doc and 'text' in doc['metadata']:
-                        docs_list.append(Document(page_content=doc['metadata']['text'], metadata=doc['metadata']))
-                    else:
-                        st.write(f"Skipping a doc due to missing metadata or text: {doc}")
-
-                # Prepare input data
-                input_data = {
-                    'input_documents': docs_list,
-                    'question': user_query,
-                }
-
-                # Invoke the chain and handle the response
-                try:
-                    response = chain.run(input_data)
-                    st.session_state.history.insert(1, {"role": "bot", "content": response})
-                except Exception as e:
-                    st.session_state.history.insert(1, {"role": "bot", "content": f"Encountered an error: {e}"})
-    
-    st.write('</div>', unsafe_allow_html=True)
+    if "memory" not in st.session_state:
+        st.session_state.memory = memory  # Initialize memory in session state
 
     # Display conversation history
     chat_container = st.container()
     with chat_container:
         for message in st.session_state.history:
             if message["role"] == "user":
-                st.write(f"<div style='text-align: right; margin: 10px 0;'><img src='https://img.icons8.com/ios-glyphs/30/000000/user.png' style='vertical-align:middle; margin-right: 5px;'></div><div style='text-align: right; margin: 10px 0;'>{message['content']}</div>", unsafe_allow_html=True)
+                st.markdown(f"""
+                    <div style='text-align: right; margin: 10px 0;'>
+                        <img src='https://img.icons8.com/ios-glyphs/30/000000/user.png' style='vertical-align:middle; margin-right: 5px;'>
+                        <span style='background-color: #DCF8C6; padding: 10px; border-radius: 10px; display: inline-block;'>{message['content']}</span>
+                    </div>
+                """, unsafe_allow_html=True)
             else:
-                st.write(f"<div style='text-align: left; margin: 10px 0;'><img src='https://raw.githubusercontent.com/singaramvikas/Legal-Luminary/main/PHOTO-2024-08-12-10-39-47.jpg' style='vertical-align:middle; margin-right: 5px;' width='40'></div><div style='text-align: left; margin: 10px 0;'>{message['content']}</div>", unsafe_allow_html=True)
+                st.markdown(f"""
+                    <div style='text-align: left; margin: 10px 0;'>
+                        <img src='https://raw.githubusercontent.com/singaramvikas/Legal-Luminary/main/PHOTO-2024-08-12-10-39-47.jpg' style='vertical-align:middle; margin-right: 5px;' width='40'>
+                        <span style='background-color: #F1F0F0; padding: 10px; border-radius: 10px; display: inline-block;'>{message['content']}</span>
+                    </div>
+                """, unsafe_allow_html=True)
+
+    # Input form fixed at the bottom
+    st.markdown('<div class="input-bar">', unsafe_allow_html=True)
+
+    with st.form(key='question_form', clear_on_submit=True):
+        user_query = st.text_input("Enter your question:", key="input_box")
+        submit_button = st.form_submit_button(label='Send')
+
+        if submit_button and user_query:
+            with st.spinner('Processing...'):
+                # Add user query to history
+                st.session_state.history.append({"role": "user", "content": user_query})
+                st.session_state.memory.chat_memory.add_user_message(user_query)
+
+                # Ensure history does not exceed 5 turns (10 messages: user and bot)
+                if len(st.session_state.history) > 10:
+                    st.session_state.history = st.session_state.history[-10:]
+                    st.session_state.memory.chat_memory.messages = st.session_state.memory.chat_memory.messages[-10:]
+
+                # Perform the query using the conversational retrieval chain
+                try:
+                    response = chain({"question": user_query})
+                    answer = response['answer']
+                    st.session_state.history.append({"role": "bot", "content": answer})
+                except Exception as e:
+                    answer = f"Encountered an error: {e}"
+                    st.session_state.history.append({"role": "bot", "content": answer})
+
+                # Ensure history does not exceed 5 turns after adding bot response
+                if len(st.session_state.history) > 10:
+                    st.session_state.history = st.session_state.history[-10:]
+                    st.session_state.memory.chat_memory.messages = st.session_state.memory.chat_memory.messages[-10:]
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 elif nav_choice == "About":
     st.title("About")
