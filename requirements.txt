@@ -2,7 +2,7 @@ streamlit
 langchain
 openai
 sentence-transformers
-pinecone-client
+pinecone
 huggingface-hub
 langchain_community
 langchain_openai
